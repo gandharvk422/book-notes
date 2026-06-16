@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Notes</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <h1>My Book Notes</h1>
+    <a href="/books/new" class="add-link">+ Add a new book</a>
+
+    <div class="sort-bar">
+        <span class="label">Sort by</span>
+        <a href="/?sort=rating">Rating</a> |
+        <a href="/?sort=recency">Recency</a> |
+        <a href="/?sort=title">Title</a> |
+    </div>
+
+    <div class="shelf">
+        <% books.forEach(book=> { %>
+            <div class="book-card">
+                <h3>
+                    <%= book.title %>
+                </h3>
+                <p class="author">by <%= book.author %>
+                </p>
+                <img src="https://covers.openlibrary.org/b/isbn/<%= book.isbn %>-M.jpg" alt="<%= book.title %> cover">
+                <p class="stars">
+                    <% const fullStars=Math.floor(book.rating); const hasHalfStar=book.rating % 1 !==0; const
+                        emptyStars=5 - fullStars - (hasHalfStar ? 1 : 0); %>
+                        <%- '★' .repeat(fullStars) %>
+                            <% if (hasHalfStar) { %>⯪<% } %><%- '☆' .repeat(emptyStars) %>
+                </p>
+                <p class="date-read">Read on: <%= book.date_read.toLocaleDateString() %>
+                </p>
+                <div class="notes">
+                    <% book.notes.split('\n').forEach(line=> { %>
+                        <blockquote>
+                            <%= line %>
+                        </blockquote>
+                        <% }) %>
+                </div>
+                <div class="card-actions">
+                    <a href="/books/<%= book.id %>/edit">Edit</a>
+                    <form action="/books/<%= book.id %>/delete" method="POST" class="inline">
+                        <button type="submit">Delete</button>
+                    </form>
+                </div>
+            </div>
+            <% }) %>
+    </div>
+</body>
+
+</html>
